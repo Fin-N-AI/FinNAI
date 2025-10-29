@@ -58,3 +58,108 @@
 - 관심종목
 - 관심기업 알림
 
+
+
+아키텍쳐
+```mermaid
+flowchart LR
+  %% Actors
+  U(User)
+  OP(Admin)
+
+  %% Systems
+  subgraph SPRING
+    direction TB
+    UC_Upload(Upload file)
+    UC_Query(Request insight)
+    UC_Watch(Watchlist & Alerts)
+    UC_Auth(Auth)
+    UC_Metrics(Spring Monitoring)
+  end
+
+  subgraph FASTAPI
+    direction TB
+    UC_Embed(Embeddings)
+    UC_Search(Vector search)
+    UC_Gen(Generate answer)
+    UC_Spec(OpenAPI spec owner)
+    FA_Metrics(FastAPI Monitoring)
+  end
+
+  subgraph DATA
+    direction TB
+    PG[PostgreSQL + pgvector]
+    S3[(MinIO or S3)]
+    EC(Embedding Cache on PG)
+  end
+
+  subgraph EXT
+    direction TB
+    UP[(Upstage Embedding API)]
+    SOLA[(Sola Generation API)]
+    DART[(DART / News)]
+  end
+
+  %% Monitoring
+  subgraph MONITORING
+    direction TB
+    MON_Metrics(Monitoring Collector)
+    MON_Logs(Structured Logs)
+    MON_Dash(Monitoring Dashboard)
+    MON_Alert(Monitoring Alerts)
+  end
+
+  %% User flows
+  U --> UC_Upload
+  U --> UC_Query
+  U --> UC_Watch
+
+  OP --> UC_Metrics
+  OP -.-> UC_Auth
+
+  %% Spring -> FastAPI internal calls
+  UC_Query --> UC_Embed
+  UC_Query --> UC_Search
+  UC_Query --> UC_Gen
+
+  %% Upload -> storage/index
+  UC_Upload --> PG
+  UC_Upload --> S3
+  UC_Upload -.-> UC_Embed
+
+  %% FastAPI -> data/external
+  UC_Embed --> EC
+  UC_Embed --> UP
+  UC_Embed --> PG
+  UC_Search --> PG
+  UC_Gen --> SOLA
+  UC_Gen --> PG
+
+  %% External
+  UC_Watch --> DART
+
+  %% Governance
+  OP -.-> UC_Spec
+
+  %% Monitoring wiring (both Spring and FastAPI)
+  UC_Metrics --> MON_Metrics
+  FA_Metrics --> MON_Metrics
+  UC_Metrics --> MON_Logs
+  FA_Metrics --> MON_Logs
+  MON_Metrics --> MON_Dash
+  MON_Logs --> MON_Dash
+  MON_Alert --> OP
+
+  %% ===== Styling =====
+  classDef featureUser fill:#EAF3FF,stroke:#2B6CB0,stroke-width:1px,rx:8,ry:8;
+  class UC_Upload,UC_Query,UC_Watch featureUser;
+
+  classDef springComp fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,rx:8,ry:8;
+  class UC_Auth,UC_Metrics springComp;
+
+  classDef aiPython fill:#F3E8FF,stroke:#7E22CE,stroke-width:1px,rx:8,ry:8;
+  class UC_Embed,UC_Search,UC_Gen,UC_Spec,FA_Metrics aiPython;
+
+  classDef monitor fill:#FFF5EB,stroke:#C05621,stroke-width:1px,rx:8,ry:8;
+  class MON_Metrics,MON_Logs,MON_Dash,MON_Alert monitor;
+```

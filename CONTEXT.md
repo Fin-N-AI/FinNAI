@@ -51,19 +51,123 @@
 🟡 priority-C (이번 주)         - 색상: #fbca04 (노랑)
 🟢 priority-D (이번 달)         - 색상: #0e8a16 (초록)
 
-# PR템플릿 만들기
+PR 템플릿
+markdown## 관련 이슈 (필수)
+Closes #이슈번호
 
-- 이슈번호,
-- 담당자
-- 테스트나 실행방법이나예시 코드실행결과
-- 시작종료
-- 추가는 자유
+## 담당자 (필수)
+- Author: @작성자
+- Reviewer: @리뷰어
 
-브랜치전략
+## 변경 사항
+무엇을 변경했나요?
 
-- Prod 4명동의 머지
-- Dev 1명이상 동의 머지
-- Feat/티켓번호
+## 테스트 (필수)
+### 실행 방법
+```bash
+실행 명령어 또는 테스트 방법
+```
+
+### 실행 결과
+```
+예상 결과:
+실제 결과:
+```
+
+## 작업 기간
+- 시작: YYYY-MM-DD
+- 종료: YYYY-MM-DD
+```
+
+---
+
+# 브랜치 전략
+```
+main (prod)
+  ↑ 
+  ├─ 머지 조건: 4명 전원 Approve 필요
+  │
+dev
+  ↑
+  ├─ 머지 조건: 1명 이상 Approve
+  │
+feature/#이슈번호-설명
+hotfix/#이슈번호-설명
+
+
+# 기능 개발
+feature/#23-login
+feature/#45-icon-active
+
+# 버그 수정
+hotfix/#67-api-error
+hotfix/#89-timeout
+```
+
+## 작업 흐름
+```
+1. 이슈 생성 → GitHub가 #번호 자동 부여
+
+2. 브랜치 생성
+   git checkout -b feature/#23-login
+
+3. 작업 & 커밋
+   git commit -m "feat(#23): 로그인 기능 추가"
+
+4. PR 생성 (dev 브랜치로)
+   - 1명 이상 Approve → dev 머지
+
+5. dev → prod PR
+   - 4명 전원 Approve → prod 머지
+```
+
+## 머지 규칙
+```
+feature/#번호 → dev
+- 1명 이상 Approve 필요
+- 담당자가 머지 버튼 클릭
+
+dev → prod
+- 4명 전원 Approve 필요
+- 마지막 승인자가 머지
+
+긴급 수정 (hotfix):
+- prod에서 직접 브랜치 생성
+- hotfix/#번호-설명
+- 2명 이상 Approve → prod 직접 머지
+- 이후 dev로 체리픽
+```
+
+## 이슈-담당자 규칙
+```
+✅ 이슈 담당:
+- 1개 이슈 = 1명 담당자
+- Assignee로 지정
+
+✅ PR 리뷰:
+- 담당자가 PR 생성
+- 다른 팀원이 리뷰
+- 문제 발견 시:
+  - 리뷰어가 코멘트
+  - 담당자가 수정
+  - 재리뷰 요청
+
+❌ 금지 사항:
+- 담당자 외 다른 사람이 해당 브랜치에 커밋 금지
+- 본인 PR 본인 Approve 금지
+```
+
+## Conflict 발생 시
+```
+1. dev와 충돌 시:
+   git checkout feature/#23-login
+   git pull origin dev
+   충돌 해결
+   git push
+
+2. 담당자가 해결 원칙
+   - 담당자가 자기 브랜치 충돌 해결
+   - 도움 필요 시 팀원에게 요청 가능
 
 # Commit Convention 예시까지 생각해보기
 

@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 🧠 Ground Issue Role 템플릿
+    url: https://github.com/Fin-N-AI/FinNAI/issues/new?template=ground_issue_role.yml
+    about: 기능 추가, 수정, 삭제 등 팀 운영 관련 이슈를 등록하려면 클릭하세요.

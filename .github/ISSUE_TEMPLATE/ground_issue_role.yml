@@ -27,11 +27,11 @@ body:
     validations:
       required: false
 
-  - type: users
+  - type: input
     id: assignee
     attributes:
       label: 👤 담당자
-      description: "이슈 담당자를 선택하세요. 선택한 사용자가 아래 본문에도 자동 표시됩니다."
+      description: "이슈 담당자를 @아이디 형태로 적어주세요. 아래 본문에도 자동 표시됩니다."
     validations:
       required: true
 

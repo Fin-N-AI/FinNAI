@@ -1,8 +1,6 @@
 name: "Ground issue role"
 description: "팀 운영 시 기능 추가, 수정, 삭제 등"
-title: "[A] Dart api load OR [B] 기존 병렬연결 concurrency값 수정"
-labels: []
-assignees: []
+title: "[Ground] "
 
 body:
   - type: markdown

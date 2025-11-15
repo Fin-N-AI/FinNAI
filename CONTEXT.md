@@ -113,6 +113,8 @@ Ragas + LLM as Judge 🅰+
 | test | 테스트 관련 |
 | cicd | CI/CD 관련 |
 | style | 포맷/주석 등 스타일 변경 |
+| ai | LLM, Agent, Embedding 등 AI 관련 기능 |
+| exp | AI 관련 학습, 테스트, 추론등 실험한 기능 - 프로덕션 포함 X |
 | chore | 기타 변경사항 |
 
 ---

@@ -165,3 +165,57 @@ free -h
 # (결과: Swap 행에 2.0Gi 라고 잡혀있으면 OK)
 ```
 
+
+# FastApi Server 초기 설정
+```
+# 1. 시스템 업데이트 & 타임존 한국 설정
+sudo apt-get update && sudo apt-get upgrade -y
+sudo timedatectl set-timezone Asia/Seoul
+
+# 2. 필수 유틸리티 & Python 빌드 라이브러리 설치 (FastAPI/uv 구동용)
+sudo apt-get install -y git make build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev htop net-tools unzip
+
+# 3. Docker 설치 (agent_test.py 등 MCP 서버 실행에 필수)
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker ubuntu  # sudo 없이 도커 쓰게 권한 부여
+
+# 4. uv (Python 패키지 매니저) & Python 3.11 설치
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.cargo/env
+uv python install 3.11
+
+# 5. 스왑 메모리 2GB 설정 (EC2 멈춤 방지용 필수)
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+
+# 잘 깔렸는지 확인
+# Python & uv 버전 확인 (uv x.x.x 뜨면 OK)
+uv --version
+uv python list
+
+# Docker 확인 (Docker version 24... 뜨면 OK)
+docker -v
+
+# 스왑 메모리 확인 (Swap 행에 2.0Gi 잡혀있으면 OK)
+free -h
+
+
+
+# 이후 직접 해당 디렉터리 들어가서 가상환경 설치
+# 1. Python 3.11 기반 가상환경(.venv) 생성
+uv venv .venv --python 3.11
+
+# 2. 가상환경 활성화 (터미널 앞에 (.venv)가 생김)
+source .venv/bin/activate
+
+# 3. 필수 패키지 설치 (엄청 빠릅니다)
+uv pip install -r requirements.in
+```
+

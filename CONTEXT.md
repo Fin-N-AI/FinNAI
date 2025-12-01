@@ -128,3 +128,40 @@ Ragas + LLM as Judge 🅰+
 | 🅲 | C |  |
 | 🅳 | D |  |
 |  |  |  |
+
+
+# AWS Spring 초기설정
+```
+# 1. 시스템 업데이트 & 타임존 한국 설정 (로그 시간 맞추기 위해 필수)
+sudo apt-get update && sudo apt-get upgrade -y
+sudo timedatectl set-timezone Asia/Seoul
+
+# 2. 필수 유틸리티 & JDK 17 설치 (Spring Boot 3 필수)
+sudo apt-get install -y openjdk-17-jdk htop net-tools unzip curl git
+
+# 3. Docker & Docker Compose 설치 (배포의 핵심)
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker ubuntu  # sudo 없이 도커 쓰게 권한 부여
+sudo apt-get install -y docker-compose-plugin
+
+# 4. 스왑 메모리 2GB 설정 (서버 다운 방지용 생명보험)
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+
+
+# 설치 확인
+java -version
+# (결과: openjdk version "17.0..." 뜨면 OK)
+
+docker -v
+# (결과: Docker version 24... 뜨면 OK)
+
+free -h
+# (결과: Swap 행에 2.0Gi 라고 잡혀있으면 OK)
+```
+
